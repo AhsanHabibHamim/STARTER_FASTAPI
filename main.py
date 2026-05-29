@@ -94,3 +94,5 @@ def create_student(student: Student):
         "message": "Student created successfully",
         "data": new_student
     }
+    
+@app.get("students/{id}")
