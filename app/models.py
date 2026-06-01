@@ -16,3 +16,11 @@ class Student(Base):
     created_at = Column(DateTime, nullable=False)
     skills = Column(String, nullable=False)
     address = Column(String, nullable=False)
+    
+class User(Base):
+    __tablename__="user"
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, nullable=False)
+    password = Column(String, nullable=False)
+    created_at = Column(DateTime, nullable=False)
+    

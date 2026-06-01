@@ -100,3 +100,4 @@ def deleteStudent(id: int, db: Session = Depends(get_db)):
     student_query.delete(synchronize_session=False)
     db.commit()
     return {"message": f"Student with id {id} deleted successfully"}
+
