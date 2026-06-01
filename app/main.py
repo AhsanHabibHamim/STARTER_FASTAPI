@@ -4,6 +4,7 @@ from datetime import date, datetime
 from . import models
 from sqlalchemy.orm import Session
 from .database import engine, get_db
+from . import schemas
 
 app = FastAPI()
 
@@ -79,7 +80,13 @@ def updateStudent(id: int, updated_data: Student, db: Session = Depends(get_db))
             detail=f"Student with id {id} not found",
         )
 
-    student_query.update({models.Student.__table__.c[k]: v for k, v in updated_data.model_dump().items()}, synchronize_session=False)
+    student_query.update(
+        {
+            models.Student.__table__.c[k]: v
+            for k, v in updated_data.model_dump().items()
+        },
+        synchronize_session=False,
+    )
     db.commit()
 
     return {"UPDATED STUDENT": student_query.first()}
@@ -101,3 +108,11 @@ def deleteStudent(id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": f"Student with id {id} deleted successfully"}
 
+
+@app.post("/createuser", status_code=status.HTTP_201_CREATED)
+def createUser(user: schemas.createUser, db: Session = Depends(get_db)):
+    new_user = models.User(**user.model_dump(), created_at=datetime.utcnow())
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    return new_user
